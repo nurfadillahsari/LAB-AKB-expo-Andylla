@@ -23,7 +23,7 @@ export default function PandaGrid() {
           ? {
               ...img,
               isFlipped: !img.isFlipped,
-              scale: img.scale < 2 ? img.scale * 1.2 : 2, // maksimal 2x
+              scale: img.scale < 2 ? img.scale * 1.2 : 2,
             }
           : img
       )
@@ -35,16 +35,11 @@ export default function PandaGrid() {
       <View style={styles.grid}>
         {gridImages.map((img) => (
           <TouchableOpacity key={img.id} onPress={() => handleImagePress(img.id)} style={styles.cell}>
-            <View style={styles.imgWrapper}>
+            <View style={[styles.imgWrapper, { transform: [{ scale: img.scale }] }]}>
               <Image
                 source={{ uri: img.isFlipped ? img.altSrc : img.mainSrc }}
-                style={[
-                  styles.img,
-                  {
-                    transform: [{ scale: img.scale }],
-                  },
-                ]}
-                resizeMode="contain"
+                style={styles.img}
+                resizeMode="cover"
               />
             </View>
           </TouchableOpacity>
@@ -84,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   img: {
-    width: '100%',
-    height: '100%',
+    width: 100,
+    height: 100,
   },
 });
