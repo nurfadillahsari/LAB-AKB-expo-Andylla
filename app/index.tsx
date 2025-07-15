@@ -23,7 +23,7 @@ export default function PandaGrid() {
           ? {
               ...img,
               isFlipped: !img.isFlipped,
-              scale: Math.min(img.scale * 1.2, 2),
+              scale: img.scale < 2 ? img.scale * 1.2 : 2, // maksimal 2x
             }
           : img
       )
@@ -40,7 +40,9 @@ export default function PandaGrid() {
                 source={{ uri: img.isFlipped ? img.altSrc : img.mainSrc }}
                 style={[
                   styles.img,
-                  { transform: [{ scale: img.scale }] },
+                  {
+                    transform: [{ scale: img.scale }],
+                  },
                 ]}
                 resizeMode="contain"
               />
@@ -78,12 +80,11 @@ const styles = StyleSheet.create({
   imgWrapper: {
     width: 100,
     height: 100,
-    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },
   img: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: '100%',
   },
 });
