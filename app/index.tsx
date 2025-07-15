@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-nat
 
 const initialGridImages = [
   { id: 1, mainSrc: 'https://i.pinimg.com/736x/46/7c/4c/467c4c3c49e081561a83d2e96aa06612.jpg', altSrc: 'https://i.pinimg.com/736x/06/80/08/0680086822501536dc5ae11b30c26f4a.jpg', isFlipped: false, scale: 1 },
-  { id: 2, mainSrc: 'https://i.pinimg.com/736x/7b/0c/76/7b0c76993a1f280bf1f71a4685083987.jpg', altSrc: 'https://www.shutterstock.com/image-vector/vector-cute-baby-panda-cartoon-600nw-2427356853.jpg', isFlipped: false, scale: 1 },
+  { id: 2, mainSrc: 'https://i.pinimg.com/736x/7b/0c/76/7b0c76993a1f280bf1f71a4685083987.jpg', altSrc: 'https://i.pinimg.com/736x/87/63/37/876337c242207b1c11f03dc4de0f9c32.jpg', isFlipped: false, scale: 1 },
   { id: 3, mainSrc: 'https://i.pinimg.com/1200x/91/db/20/91db207780ad2525a05e58420d289c78.jpg', altSrc: 'https://i.pinimg.com/736x/30/f2/ae/30f2ae09681fee7f23a54a03d007c2da.jpg', isFlipped: false, scale: 1 },
   { id: 4, mainSrc: 'https://i.pinimg.com/736x/33/48/6a/33486a759d3334a491f774de8ba86cea.jpg', altSrc: 'https://i.pinimg.com/736x/2a/15/a7/2a15a7296143a245d99f965de81f2b0b.jpg', isFlipped: false, scale: 1 },
   { id: 5, mainSrc: 'https://i.pinimg.com/736x/d1/a1/f4/d1a1f47dab051e32a917e848a97b6806.jpg', altSrc: 'https://i.pinimg.com/736x/47/2d/b2/472db25c36ec8aa0f529a8c2b6f6746c.jpg', isFlipped: false, scale: 1 },
@@ -17,8 +17,8 @@ export default function PandaGrid() {
   const [gridImages, setGridImages] = useState(initialGridImages);
 
   const handleImagePress = (id: number) => {
-    setGridImages(imgs =>
-      imgs.map(img =>
+    setGridImages((imgs) =>
+      imgs.map((img) =>
         img.id === id
           ? {
               ...img,
@@ -33,13 +33,18 @@ export default function PandaGrid() {
   return (
     <ScrollView contentContainerStyle={styles.root}>
       <View style={styles.grid}>
-        {gridImages.map(img => (
+        {gridImages.map((img) => (
           <TouchableOpacity key={img.id} onPress={() => handleImagePress(img.id)} style={styles.cell}>
-            <Image
-              source={{ uri: img.isFlipped ? img.altSrc : img.mainSrc }}
-              style={[styles.img, { transform: [{ scale: img.scale }] }]}
-              resizeMode="cover"
-            />
+            <View style={styles.imgWrapper}>
+              <Image
+                source={{ uri: img.isFlipped ? img.altSrc : img.mainSrc }}
+                style={[
+                  styles.img,
+                  { transform: [{ scale: img.scale }] },
+                ]}
+                resizeMode="contain"
+              />
+            </View>
           </TouchableOpacity>
         ))}
       </View>
@@ -48,8 +53,37 @@ export default function PandaGrid() {
 }
 
 const styles = StyleSheet.create({
-  root: { flexGrow: 1, padding: 20, backgroundColor: '#fff', alignItems: 'center' },
-  grid: { width: 330, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' },
-  cell: { width: 100, height: 100, margin: 5, borderRadius: 8, overflow: 'hidden', backgroundColor: '#eee' },
-  img: { width: '100%', height: '100%' },
+  root: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  grid: {
+    width: 330,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  cell: {
+    width: 100,
+    height: 100,
+    margin: 5,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#eee',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imgWrapper: {
+    width: 100,
+    height: 100,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  img: {
+    width: 100,
+    height: 100,
+  },
 });
