@@ -1,108 +1,102 @@
-import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableWithoutFeedback,
-  ScrollView,
-  Animated,
-} from 'react-native';
+// app/index.tsx
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-
-  const imageData = [
-  { id: 1, mainSrc: 'https://picsum.photos/id/10/200', altSrc: 'https://picsum.photos/id/11/200' },
-  { id: 2, mainSrc: 'https://picsum.photos/id/12/200', altSrc: 'https://picsum.photos/id/13/200' },
-  { id: 3, mainSrc: 'https://picsum.photos/id/14/200', altSrc: 'https://picsum.photos/id/15/200' },
-  { id: 4, mainSrc: 'https://picsum.photos/id/16/200', altSrc: 'https://picsum.photos/id/17/200' },
-  { id: 5, mainSrc: 'https://picsum.photos/id/18/200', altSrc: 'https://picsum.photos/id/19/200' },
-  { id: 6, mainSrc: 'https://picsum.photos/id/20/200', altSrc: 'https://picsum.photos/id/21/200' },
-  { id: 7, mainSrc: 'https://picsum.photos/id/22/200', altSrc: 'https://picsum.photos/id/23/200' },
-  { id: 8, mainSrc: 'https://picsum.photos/id/24/200', altSrc: 'https://picsum.photos/id/25/200' },
-  { id: 9, mainSrc: 'https://picsum.photos/id/26/200', altSrc: 'https://picsum.photos/id/27/200' },
+const allNames = [
+  "Fauzan Azhari Rahman (105841109622)",
+  "Muh. Fadhil Aahmad (105841109722)",
+  "Dayang Aisyah (105841109822)",
+  "Ilfauza Febrianty Faisal  (105841110222)",
+  "Sa'ban (105841110322)",
+  "Nur Fadillah Sari (105841110422)",  // Index ke-5
+  "Wa Nanda Sulystrian (105841110622)",
+  "Muh. Tegar Al Fikri  (105841110722)",
+  "Rayhanatul Jannah (105841110822)",
+  "Hanna Maryam (105841110922)",
+  "Afifah Auliyah (105841111022)"
 ];
 
+const stambukIndex = 5;
+const total = allNames.length;
 
+const before = Array.from({ length: 5 }, (_, i) => (stambukIndex - i - 1 + total) % total)
+  .map(i => allNames[i])
+  .reverse();
 
+const after = Array.from({ length: 5 }, (_, i) => allNames[(stambukIndex + i + 1) % total]);
 
-export default function ImageGrid() {
-  const [images, setImages] = useState(
-    imageData.map(img => ({
-      ...img,
-      isFlipped: false,
-      scale: new Animated.Value(1),
-      scaleNum: 1,
-    }))
-  );
+const finalList = [...before, allNames[stambukIndex], ...after];
 
-  const handlePress = (id: number) => {
-    setImages(prevImages =>
-      prevImages.map(img => {
-        if (img.id === id) {
-          const newScaleNum = Math.min(img.scaleNum * 1.2, 2);
-          Animated.timing(img.scale, {
-            toValue: newScaleNum,
-            duration: 200,
-            useNativeDriver: true,
-          }).start();
+const fontList = [
+  "AbrilFatface-Regular",
+  "BowlbyOne-Regular",
+  "Michroma-Regular",
+  "Play-Regular",
+  "Shojumaru-Regular",
+  "Montserrat-Variable",
+  "Raleway-Variable",
+  "Roboto-Variable",
+  "Rubik-Variable",
+  "TikTokSans-Variable"
+];
 
-          return {
-            ...img,
-            isFlipped: !img.isFlipped,
-            scaleNum: newScaleNum,
-          };
-        }
-        return img;
-      })
-    );
-  };
-
+export default function HomePage() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.grid}>
-        {images.map(img => (
-          <TouchableWithoutFeedback
-            key={img.id}
-            onPress={() => handlePress(img.id)}
-          >
-            <View style={styles.cell}>
-              <Animated.Image
-                source={{ uri: img.isFlipped ? img.altSrc : img.mainSrc }}
-                style={[
-                  styles.image,
-                  { transform: [{ scale: img.scale }] }
-                ]}
-                resizeMode="cover"
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        ))}
-      </View>
+      <Text style={styles.title}>✨ Daftar Nama Berdasarkan Stambuk</Text>
+      {finalList.map((name, idx) => {
+        const isMainName = name.includes("Nur Fadillah Sari");
+        return (
+          <View key={idx} style={styles.card}>
+            <Text
+              style={[
+                styles.nameText,
+                {
+                  fontFamily: fontList[idx],
+                  fontWeight: isMainName ? "bold" : "normal",
+                  color: isMainName ? "#fd4b69ff" : "#222"
+                }
+              ]}
+            >
+              {name}
+            </Text>
+            <Text style={styles.fontLabel}>Font: {fontList[idx]}</Text>
+          </View>
+        );
+      })}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 40,
-    alignItems: 'center',
+    paddingVertical: 32,
+    paddingHorizontal: 16,
+    backgroundColor: "#F8F9FA"
   },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: 330,
-    justifyContent: 'center',
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 24,
+    textAlign: "center",
+    color: "#1D3557"
   },
-  cell: {
-    width: 100,
-    height: 100,
-    margin: 5,
-    backgroundColor: '#eee',
-    borderRadius: 8,
-    overflow: 'hidden',
+  card: {
+    backgroundColor: "#ffffff",
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
+    marginBottom: 18
   },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
+  nameText: {
+    fontSize: 20
   },
+  fontLabel: {
+    fontSize: 12,
+    color: "#6c757d",
+    marginTop: 4
+  }
 });
