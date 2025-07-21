@@ -1,32 +1,44 @@
 // app/index.tsx
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-const allNames = [
+// 🔡 Daftar nama lengkap beserta stambuk
+const daftarNama = [
   "Fauzan Azhari Rahman (105841109622)",
   "Muh. Fadhil Aahmad (105841109722)",
   "Dayang Aisyah (105841109822)",
-  "Ilfauza Febrianty Faisal  (105841110222)",
+  "Ilfauza Febrianty Faisal (105841110222)",
   "Sa'ban (105841110322)",
-  "Nur Fadillah Sari (105841110422)",  // Index ke-5
+  "Nur Fadillah Sari (105841110422)",  // posisi target
   "Wa Nanda Sulystrian (105841110622)",
-  "Muh. Tegar Al Fikri  (105841110722)",
+  "Muh. Tegar Al Fikri (105841110722)",
   "Rayhanatul Jannah (105841110822)",
   "Hanna Maryam (105841110922)",
   "Afifah Auliyah (105841111022)"
 ];
 
-const stambukIndex = 5;
-const total = allNames.length;
+// 🎯 Posisi stambuk utama
+const posisiUtama = 5;
+const jumlahNama = daftarNama.length;
 
-const before = Array.from({ length: 5 }, (_, i) => (stambukIndex - i - 1 + total) % total)
-  .map(i => allNames[i])
-  .reverse();
+// ⏪ Ambil 5 nama sebelum (dengan wrap-around jika perlu)
+const namaSebelum = [];
+for (let i = 5; i >= 1; i--) {
+  const idx = (posisiUtama - i + jumlahNama) % jumlahNama;
+  namaSebelum.push(daftarNama[idx]);
+}
 
-const after = Array.from({ length: 5 }, (_, i) => allNames[(stambukIndex + i + 1) % total]);
+// ⏩ Ambil 5 nama setelah
+const namaSetelah = [];
+for (let i = 1; i <= 5; i++) {
+  const idx = (posisiUtama + i) % jumlahNama;
+  namaSetelah.push(daftarNama[idx]);
+}
 
-const finalList = [...before, allNames[stambukIndex], ...after];
+// 📜 Gabungkan semua nama
+const daftarFinal = [...namaSebelum, daftarNama[posisiUtama], ...namaSetelah];
 
-const fontList = [
+// 🧬 Daftar font berbeda
+const jenisFont = [
   "AbrilFatface-Regular",
   "BowlbyOne-Regular",
   "Michroma-Regular",
@@ -39,27 +51,29 @@ const fontList = [
   "TikTokSans-Variable"
 ];
 
-export default function HomePage() {
+export default function HomeScreen() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>✨ Daftar Nama Berdasarkan Stambuk</Text>
-      {finalList.map((name, idx) => {
-        const isMainName = name.includes("Nur Fadillah Sari");
+    <ScrollView contentContainerStyle={gayaUtama.kontainer}>
+      <Text style={gayaUtama.judul}>📘 10 Nama Berdasarkan Urutan Stambuk</Text>
+
+      {daftarFinal.map((itemNama, urutan) => {
+        const sorot = itemNama.includes("Nur Fadillah Sari");
+
         return (
-          <View key={idx} style={styles.card}>
+          <View key={urutan} style={gayaUtama.kartu}>
             <Text
               style={[
-                styles.nameText,
+                gayaUtama.teksNama,
                 {
-                  fontFamily: fontList[idx],
-                  fontWeight: isMainName ? "bold" : "normal",
-                  color: isMainName ? "#fd4b69ff" : "#222"
+                  fontFamily: jenisFont[urutan],
+                  fontWeight: sorot ? "bold" : "normal",
+                  color: sorot ? "#e63946" : "#2d2d2d"
                 }
               ]}
             >
-              {name}
+              {itemNama}
             </Text>
-            <Text style={styles.fontLabel}>Font: {fontList[idx]}</Text>
+            <Text style={gayaUtama.labelFont}>Font yang digunakan: {jenisFont[urutan]}</Text>
           </View>
         );
       })}
@@ -67,36 +81,37 @@ export default function HomePage() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 32,
-    paddingHorizontal: 16,
-    backgroundColor: "#F8F9FA"
+// 🎨 Gaya tampilan komponen
+const gayaUtama = StyleSheet.create({
+  kontainer: {
+    paddingVertical: 36,
+    paddingHorizontal: 20,
+    backgroundColor: "#f1f3f5"
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 24,
+  judul: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 28,
     textAlign: "center",
-    color: "#1D3557"
+    color: "#003049"
   },
-  card: {
+  kartu: {
     backgroundColor: "#ffffff",
-    padding: 16,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 14,
     shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
-    marginBottom: 18
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 5,
+    elevation: 4,
+    marginBottom: 20
   },
-  nameText: {
+  teksNama: {
     fontSize: 20
   },
-  fontLabel: {
+  labelFont: {
     fontSize: 12,
     color: "#6c757d",
-    marginTop: 4
+    marginTop: 5
   }
 });
